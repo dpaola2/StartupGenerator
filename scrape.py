@@ -8,25 +8,31 @@ def open_ideas():
     try:
         return json.loads(open(FILENAME, "r").read())
     except:
-        return {}
+        return {"this": {}, "that": {}}
 
 def write_ideas(ideas):
     print "Writing %s..." % FILENAME
-    return open(FILENAME, "w").write(json.dumps(ideas))
+    return open(FILENAME, "w").write(json.dumps(ideas, indent = 2))
 
 def main():
     ideas = open_ideas()
     count = 0
-    while count < 50:
+    while count < 25:
         print "querying...",
-        idea = requests.get("http://itsthisforthat.com/api.php?json").json()
-        print "response: %s" % idea,
-        ideas[idea["this"]] = idea["that"]
+        try:
+            idea = requests.get("http://itsthisforthat.com/api.php?json").json()
+            print "response: %s" % idea,
+            this = idea["this"]
+            that = idea["that"]
+            ideas["this"][this] = 1
+            ideas["that"][that] = 1
+            write_ideas(ideas)
+        except Exception, e:
+            print e
         count += 1
         print "sleeping for 1 second."
         time.sleep(1)
-    write_ideas(ideas)
-    print "Quitting with %s ideas!" % len(ideas.keys())
+    print "Quitting with %s keys and %s values!!" % (len(ideas["this"].keys()), len(ideas["that"].keys()))
     
 
 if __name__ == '__main__':
