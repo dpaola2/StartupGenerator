@@ -26,14 +26,14 @@ def main():
             that = idea["that"]
             ideas["this"][this] = 1
             ideas["that"][that] = 1
-            write_ideas(ideas)
         except Exception, e:
             print e
+        finally:
+            write_ideas(ideas)
         count += 1
         print "sleeping for 1 second."
         time.sleep(1)
     print "Quitting with %s keys and %s values!!" % (len(ideas["this"].keys()), len(ideas["that"].keys()))
-    
 
 if __name__ == '__main__':
     main()
